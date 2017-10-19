@@ -1,0 +1,171 @@
+﻿<template>
+    <h2 with.bind="mortgage">
+        <span>${ name }</span>&nbsp;
+        <span>${ monthlyPaymentWithTaxesAndFees | currencyFormat }/month</span>
+    </h2>
+
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#mortgage" data-toggle="tab">Mortgage</a>
+        </li>
+        <li>
+            <a href="#amortization" data-toggle="tab" click.delegate="calculateAmortization()">Amortization</a>
+        </li>
+    </ul>
+
+    <br />
+    <div class="tab-content">
+        <div id="mortgage" class="tab-pane active">
+            <div with.bind="mortgage" class="row">
+                <form class="form-horizontal col-md-7">
+                    <div class="form-group">
+                        <label class="control-label">Purchase Price:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value.bind="purchasePrice | currencyFormat & updateTrigger:'blur'" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Down Payment:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value.bind="downPayment | currencyFormat & updateTrigger:'blur'" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Rate:</label>
+                        <div class="input-group">     
+                            <input type="text" class="form-control" value.bind="rate & updateTrigger:'blur'" />
+                            <div class="input-group-addon">%</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Term:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value.bind="term & updateTrigger:'blur'" />
+                            <div class="input-group-addon">years</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Property Tax:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value.bind="propertyTax | currencyFormat & updateTrigger:'blur'" />
+                            <div class="input-group-addon">/year</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">PMI:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value.bind="pmi | currencyFormat & updateTrigger:'blur'" />
+                            <div class="input-group-addon">/month</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Association Fees:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value.bind="dues | currencyFormat & updateTrigger:'blur'" />
+                            <div class="input-group-addon">/month</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Name:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value.bind="name" />
+                        </div>
+                    </div>
+                </form>
+
+                <div class="col-md-5">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Total Cost</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Principal</td>
+                                <td class="text-right">
+                                    ${ totalPrincipal | currencyFormat }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Interest</td>
+                                <td class="text-right">
+                                    ${ totalInterest | currencyFormat }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Taxes</td>
+                                <td class="text-right">
+                                    ${ totalTaxes | currencyFormat }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PMI</td>
+                                <td class="text-right">
+                                    ${ totalPmi | currencyFormat }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Fees</td>
+                                <td class="text-right">
+                                    ${ totalDues | currencyFormat }
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Total</td>
+                                <td class="text-right">
+                                    ${ totalCost | currencyFormat }
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="pull-right">
+                        <button class="btn btn-primary" click.delegate="save()">Save</button>
+                        <button class="btn btn-danger" click.delegate="delete()" if.bind="!isNewMortgage">Delete</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div id="amortization" class="tab-pane">
+            <p>The amortization schedule only includes principal and interest.  It does not include taxes and other fees.
+                <select class="pull-right input-sm" value.bind="amortizationOption" change.delegate="calculateAmortization()">
+                    <option value="YEARLY">Yearly</option>
+                    <option value="MONTHLY">Monthly</option>
+                </select>
+            </p>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Payment Nbr</th>
+                        <th>Payment</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr repeat.for="data of amortizationData">
+                        <td>${ data.period }</td>
+                        <td>${ data.payment | currencyFormat }</td>
+                        <td>${ data.principal | currencyFormat }</td>
+                        <td>${ data.interest | currencyFormat }</td>
+                        <td>${ data.balance | currencyFormat }</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+</template>

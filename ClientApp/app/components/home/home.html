@@ -1,0 +1,11 @@
+<template>
+    <h3>Recent Mortgages</h3>
+
+    <a class="btn btn-success btn-block" href="#/mortgage">New Mortgage</a>
+
+    <ul>
+        <li repeat.for="mortgage of mortgages">
+            <a href="#/mortgage/${ mortgage.id }">${ mortgage.name } - ${ mortgage.monthlyPaymentWithTaxesAndFees | currencyFormat }/mo.</a>
+        </li>
+    </ul>
+</template>

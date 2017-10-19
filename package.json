@@ -1,0 +1,46 @@
+{
+  "name": "mortgage_app",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "aurelia-bootstrapper": "^2.0.1",
+    "aurelia-computed": "^1.0.0",
+    "aurelia-dialog": "^1.0.0-rc.1.0.3",
+    "aurelia-fetch-client": "^1.0.1",
+    "aurelia-framework": "^1.1.0",
+    "aurelia-loader-webpack": "^2.0.0",
+    "aurelia-pal": "^1.3.0",
+    "aurelia-router": "^1.2.1",
+    "bootstrap": "^3.3.7",
+    "isomorphic-fetch": "^2.2.1",
+    "jquery": "^3.2.1",
+    "numeral": "^2.0.6",
+    "toastr": "^2.1.2"
+  },
+  "devDependencies": {
+    "@types/numeral": "0.0.22",
+    "@types/toastr": "^2.1.35",
+    "@types/webpack-env": "^1.13.0",
+    "aspnet-webpack": "^2.0.1",
+    "aurelia-webpack-plugin": "^2.0.0-rc.2",
+    "css-loader": "^0.28.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
+    "html-loader": "^0.4.5",
+    "json-loader": "^0.5.4",
+    "style-loader": "^0.16.1",
+    "ts-loader": "^2.0.3",
+    "typescript": "^2.2.2",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.3.3",
+    "webpack-hot-middleware": "^2.18.0",
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "prebuild": "npm run clean -s",
+    "build": "npm run vendor-pack && npm run app-pack",
+    "app-pack": "node node_modules/webpack/bin/webpack.js",
+    "vendor-pack": "node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js",
+    "clean": "rimraf wwwroot/dist/*"
+  }
+}
