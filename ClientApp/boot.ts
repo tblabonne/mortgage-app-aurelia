@@ -8,7 +8,7 @@ declare const IS_DEV_BUILD: boolean; // The value is supplied by Webpack during 
 export function configure(aurelia: Aurelia) {
     aurelia.use
         .standardConfiguration()
-        .plugin(PLATFORM.moduleName('aurelia-computed'))
+        .plugin(PLATFORM.moduleName('aurelia-computed'), { enableLogging: IS_DEV_BUILD })
         .plugin(PLATFORM.moduleName('aurelia-dialog'))
         .globalResources([ PLATFORM.moduleName('app/converters/currency-format') ]);
 

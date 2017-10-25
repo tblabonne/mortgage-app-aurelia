@@ -13,9 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\compare\compare.ts" />
     <None Remove="ClientApp\app\components\confirmDialog\confirmDialog.ts" />
     <None Remove="ClientApp\app\components\mortgage\mortgage.ts" />
     <None Remove="ClientApp\app\models\mortgage.ts" />
+    <None Remove="ClientApp\app\utilities.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,11 +30,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\components\compare\compare.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\confirmDialog\confirmDialog.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\mortgage\mortgage.ts" />
     <TypeScriptCompile Include="ClientApp\app\converters\currency-format.ts" />
     <TypeScriptCompile Include="ClientApp\app\dataService.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\mortgage.ts" />
+    <TypeScriptCompile Include="ClientApp\app\utilities.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

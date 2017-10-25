@@ -1,7 +1,14 @@
 <template>
-    <h3>Recent Mortgages</h3>
+    <div class="page-header">
+        <h2>Recent Mortgages</h2>
+    </div>
 
-    <a class="btn btn-success btn-block" href="#/mortgage">New Mortgage</a>
+    <div class="row">
+        <div class="col-md-3 pull-right">
+            <a class="btn btn-success btn-block" href="#/mortgage"><i class="glyphicon glyphicon-plus"></i> New Mortgage</a>
+        </div>
+    </div>
+    
 
     <ul>
         <li repeat.for="mortgage of mortgages">

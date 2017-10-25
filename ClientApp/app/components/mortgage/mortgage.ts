@@ -5,10 +5,12 @@ import * as toastr from 'toastr';
 import { Mortgage, AmortizationData } from '../../models/mortgage';
 import { DataService } from '../../dataService';
 import { ConfirmDialog } from '../confirmDialog/confirmDialog';
+import { areEqual } from '../../utilities';
 
 @autoinject
 export class MortgageViewModel {
     mortgage: Mortgage;
+    originalMortgage: Mortgage;
     amortizationData: AmortizationData[];
     amortizationOption: string = "YEARLY";
 
@@ -24,7 +26,19 @@ export class MortgageViewModel {
             this.mortgage = await this.dataService.getMortgage(id);
         }
 
+        this.originalMortgage = JSON.parse(JSON.stringify(this.mortgage));
+
         return this.mortgage;
+    }
+
+    canDeactivate(): Promise<boolean> {
+        if (this.canSave) {
+            return this.dialogService.open({ viewModel: ConfirmDialog, model: 'You have unsaved changes.  Are you sure you want to leave?' }).whenClosed(response => {
+                return response.output;
+            });
+        }
+
+        return Promise.resolve(true);
     }
 
     calculateAmortization() {
@@ -43,7 +57,7 @@ export class MortgageViewModel {
     }
 
     delete() {
-        this.dialogService.open({ viewModel: ConfirmDialog }).whenClosed(response => {
+        this.dialogService.open({ viewModel: ConfirmDialog, model: 'Are you sure you want to delete this mortgage?' }).whenClosed(response => {
             if (response.output === true) {
                 this.dataService.deleteMortgage(this.mortgage.id).then(success => {
                     if (success) {
@@ -57,6 +71,10 @@ export class MortgageViewModel {
 
     get isNewMortgage(): boolean {
         return this.mortgage.id === 0;
+    }
+
+    get canSave(): boolean {
+        return this.isNewMortgage || !areEqual(this.mortgage, this.originalMortgage);
     }
 
     private createDefaultMortgage() {

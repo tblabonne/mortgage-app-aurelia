@@ -21,7 +21,16 @@ export class App {
             moduleId: PLATFORM.moduleName('../mortgage/mortgage'),
             nav: false,
             title: 'Mortgage'
-        }]);
+        },
+        {
+            route: ['compare'],
+            name: 'compare',
+            settings: { icon: 'usd' },
+            moduleId: PLATFORM.moduleName('../compare/compare'),
+            nav: true,
+            title: 'Compare'
+        }
+        ]);
 
         this.router = router;
     }

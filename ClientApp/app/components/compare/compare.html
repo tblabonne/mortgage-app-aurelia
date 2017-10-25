@@ -1,0 +1,91 @@
+﻿<template>
+    <div class="page-header">
+        <h2>Compare Mortgages <small>Select up to three mortgages to compare.</small></h2>
+    </div>
+    
+    <ul>
+        <li repeat.for="item of allMortgages">
+            <label class="checkbox checkbox-inline">
+                <input type="checkbox" disabled.bind="!canSelect && !item.selected" checked.bind="item.selected" /> ${ item.mortgage.name }
+            </label>
+        </li>
+    </ul>
+
+    <a href="#" show.bind="hasSelection" click.trigger="clear()">Clear Selections</a>
+
+    <div class="alert alert-success" show.bind="!hasSelection">
+        Check up to three mortgages in the list above to see a comparison here.
+    </div>
+
+    <table class="table" show.bind="hasSelection">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <th>
+                        <a href="#/mortgage/${ mortgage.id }">${ mortgage.name }</a>&nbsp;
+                        <span class="label label-success" if.bind="bestMortgage === mortgage">Best</span>
+                    </th>
+                </template>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Monthly Payment</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.monthlyPaymentWithTaxesAndFees | currencyFormat }</td>
+                </template>
+            </tr>
+            <tr>
+                <td>Term</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.term } years</td>
+                </template>
+            </tr>
+            <tr>
+                <td>Rate</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.rate }%</td>
+                </template>
+            </tr>
+            <tr>
+                <td>Principal</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.totalPrincipal | currencyFormat }</td>
+                </template>
+            </tr>
+            <tr>
+                <td>Interest</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.totalInterest | currencyFormat }</td>
+                </template>
+            </tr>
+            <tr>
+                <td>Taxes</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.totalTaxes | currencyFormat }</td>
+                </template>
+            </tr>
+            <tr>
+                <td>PMI</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.totalPmi | currencyFormat }</td>
+                </template>
+            </tr>
+            <tr>
+                <td>Dues</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.totalDues | currencyFormat }</td>
+                </template>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total Cost</td>
+                <template repeat.for="mortgage of selectedMortgages">
+                    <td>${ mortgage.totalCost | currencyFormat }</td>
+                </template>
+            </tr>
+        </tfoot>
+    </table>
+</template>

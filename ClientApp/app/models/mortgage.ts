@@ -1,4 +1,6 @@
-﻿export class Mortgage {
+﻿import { computedFrom } from 'aurelia-framework';
+
+export class Mortgage {
     id: number = 0;
     name: string = "";
     purchasePrice: number = 0;
@@ -9,7 +11,7 @@
     pmi: number = 0;
     dues: number = 0;
 
-    constructor(data: any = null) {
+    constructor(data?: any) {
         if (data) {
             this.id = data.id || 0;
             this.name = data.name || "";
@@ -31,6 +33,7 @@
         return this.term * 12;
     }
 
+    @computedFrom('rate', 'purchasePrice', 'downPayment', 'termInMonths')
     get monthlyPayment(): number {
         let r = this.rate / 100 / 12,
             p = this.purchasePrice - this.downPayment,
