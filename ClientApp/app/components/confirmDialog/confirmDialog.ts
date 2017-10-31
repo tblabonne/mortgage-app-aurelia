@@ -1,15 +1,22 @@
-﻿import { autoinject } from 'aurelia-framework';
-import { DialogController } from 'aurelia-dialog';
+﻿import { DialogController } from "aurelia-dialog";
+import { autoinject } from "aurelia-framework";
+
+export interface IConfirmDialogModel {
+    message: string;
+    title: string;
+}
 
 @autoinject
 export class ConfirmDialog {
-    message: string;
+    public message: string;
+    public title: string;
 
     constructor(public controller: DialogController) {
 
     }
 
-    activate(message: string) {
-        this.message = message;
+    public activate(model: IConfirmDialogModel) {
+        this.message = model.message;
+        this.title = model.title;
     }
 }

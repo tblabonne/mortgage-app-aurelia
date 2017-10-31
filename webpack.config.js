@@ -23,6 +23,7 @@ module.exports = (env) => {
                 { test: /\.ts$/i, include: /ClientApp/, use: 'ts-loader?silent=true' },
                 { test: /\.html$/i, use: 'html-loader' },
                 { test: /\.css$/i, use: isDevBuild ? 'css-loader' : 'css-loader?minimize' },
+                { test: /\.less$/i, use: ['css-loader', 'less-loader']},
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
             ]
         },

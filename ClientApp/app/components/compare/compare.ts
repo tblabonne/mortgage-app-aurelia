@@ -1,28 +1,29 @@
-﻿import { autoinject, computedFrom } from 'aurelia-framework';
-import { DataService } from '../../dataService';
-import { Mortgage } from '../../models/mortgage';
+﻿import { autoinject } from "aurelia-framework";
+import { DataService } from "../../dataService";
+import { Mortgage } from "../../models/mortgage";
+import { computedFrom } from "../../utilities";
 
-interface MortgageSelection {
+interface IMortgageSelection {
     selected: boolean;
     mortgage: Mortgage;
 }
 
 @autoinject
 export class CompareViewModel {
-    allMortgages: MortgageSelection[];
+    public allMortgages: IMortgageSelection[];
 
     constructor(private dataService: DataService) {
 
     }
 
-    async activate(): Promise<MortgageSelection[]> {
-        let mortgages = await this.dataService.getMortgages();
+    public async activate(): Promise<IMortgageSelection[]> {
+        const mortgages = await this.dataService.getMortgages();
 
-        let results: MortgageSelection[] = [];
-        for (let m of mortgages) {
-            let selector = {
+        const results: IMortgageSelection[] = [];
+        for (const m of mortgages) {
+            const selector = {
                 selected: false,
-                mortgage: m
+                mortgage: m,
             };
 
             results.push(selector);
@@ -32,15 +33,15 @@ export class CompareViewModel {
         return results;
     }
 
-    clear() {
-        for (let item of this.allMortgages) {
+    public clear() {
+        for (const item of this.allMortgages) {
             item.selected = false;
         }
     }
 
-    get selectedMortgages(): Mortgage[] {
-        let results: Mortgage[] = [];
-        for (let item of this.allMortgages) {
+    public get selectedMortgages(): Mortgage[] {
+        const results: Mortgage[] = [];
+        for (const item of this.allMortgages) {
             if (item.selected) {
                 results.push(item.mortgage);
             }
@@ -49,21 +50,25 @@ export class CompareViewModel {
         return results;
     }
 
-    get canSelect(): boolean {
+    @computedFrom<CompareViewModel>("selectedMortgages")
+    public get canSelect(): boolean {
         return this.selectedMortgages.length < 3;
     }
 
-    get hasSelection(): boolean {
+    @computedFrom<CompareViewModel>("selectedMortgages")
+    public get hasSelection(): boolean {
         return this.selectedMortgages.length > 1;
     }
 
-    get bestMortgage(): Mortgage | null {
+    @computedFrom<CompareViewModel>("selectedMortgages")
+    public get bestMortgage(): Mortgage | null {
         if (this.selectedMortgages.length <= 1) {
             return null;
         }
 
-        let min = Number.MAX_VALUE, best: Mortgage | null = null;
-        for (let item of this.selectedMortgages) {
+        let min = Number.MAX_VALUE;
+        let best: Mortgage | null = null;
+        for (const item of this.selectedMortgages) {
             if (item.totalCost < min) {
                 best = item;
                 min = best.totalCost;

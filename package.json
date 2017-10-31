@@ -15,7 +15,8 @@
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.2.1",
     "numeral": "^2.0.6",
-    "toastr": "^2.1.2"
+    "toastr": "^2.1.2",
+    "tslib": "^1.8.0"
   },
   "devDependencies": {
     "@types/numeral": "0.0.22",
@@ -28,19 +29,23 @@
     "file-loader": "^0.11.1",
     "html-loader": "^0.4.5",
     "json-loader": "^0.5.4",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "rimraf": "^2.6.2",
     "style-loader": "^0.16.1",
     "ts-loader": "^2.0.3",
+    "tslint": "^5.8.0",
     "typescript": "^2.2.2",
     "url-loader": "^0.5.8",
     "webpack": "^2.3.3",
-    "webpack-hot-middleware": "^2.18.0",
-    "rimraf": "^2.6.2"
+    "webpack-hot-middleware": "^2.18.0"
   },
   "scripts": {
     "prebuild": "npm run clean -s",
     "build": "npm run vendor-pack && npm run app-pack",
     "app-pack": "node node_modules/webpack/bin/webpack.js",
     "vendor-pack": "node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js",
-    "clean": "rimraf wwwroot/dist/*"
+    "clean": "rimraf wwwroot/dist/*",
+    "lint": "node_modules/.bin/tslint ClientApp/**/*.ts"
   }
 }

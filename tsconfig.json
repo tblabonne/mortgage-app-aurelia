@@ -7,6 +7,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipDefaultLibCheck": true,
+    "importHelpers": true,
     "strict": true,
     "lib": [ "es2015", "dom" ],
     "types": [ "webpack-env" ]

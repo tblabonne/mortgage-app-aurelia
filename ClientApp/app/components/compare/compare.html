@@ -23,7 +23,7 @@
                 <th>&nbsp;</th>
                 <template repeat.for="mortgage of selectedMortgages">
                     <th>
-                        <a href="#/mortgage/${ mortgage.id }">${ mortgage.name }</a>&nbsp;
+                        <a route-href="route: mortgage; params.bind: { id: mortgage.id }">${ mortgage.name }</a>&nbsp;
                         <span class="label label-success" if.bind="bestMortgage === mortgage">Best</span>
                     </th>
                 </template>

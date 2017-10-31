@@ -1,35 +1,35 @@
-import { Aurelia, PLATFORM } from 'aurelia-framework';
-import { Router, RouterConfiguration } from 'aurelia-router';
+import { Aurelia, PLATFORM } from "aurelia-framework";
+import { Router, RouterConfiguration } from "aurelia-router";
 
 export class App {
-    router: Router;
+    public router: Router;
 
-    configureRouter(config: RouterConfiguration, router: Router) {
-        config.title = 'Mortgage App';
+    public configureRouter(config: RouterConfiguration, router: Router) {
+        config.title = "Mortgage App";
         config.map([{
-            route: [ '', 'home' ],
-            name: 'home',
-            settings: { icon: 'home' },
-            moduleId: PLATFORM.moduleName('../home/home'),
+            route: [ "", "home" ],
+            name: "home",
+            settings: { icon: "home" },
+            moduleId: PLATFORM.moduleName("../home/home"),
             nav: true,
-            title: 'Home'
+            title: "Home",
         },
         {
-            route: ['mortgage', 'mortgage/:id'],
-            name: 'mortgage',
-            settings: { icon: 'home' },
-            moduleId: PLATFORM.moduleName('../mortgage/mortgage'),
+            route: ["mortgage", "mortgage/:id"],
+            name: "mortgage",
+            settings: { icon: "home" },
+            moduleId: PLATFORM.moduleName("../mortgage/mortgage"),
             nav: false,
-            title: 'Mortgage'
+            title: "Mortgage",
         },
         {
-            route: ['compare'],
-            name: 'compare',
-            settings: { icon: 'usd' },
-            moduleId: PLATFORM.moduleName('../compare/compare'),
+            route: ["compare"],
+            name: "compare",
+            settings: { icon: "usd" },
+            moduleId: PLATFORM.moduleName("../compare/compare"),
             nav: true,
-            title: 'Compare'
-        }
+            title: "Compare",
+        },
         ]);
 
         this.router = router;

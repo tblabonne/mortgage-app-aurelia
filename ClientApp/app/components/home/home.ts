@@ -1,16 +1,14 @@
-import { autoinject } from 'aurelia-framework';
-import { DataService } from '../../dataService';
-import { Mortgage } from '../../models/mortgage';
+import { autoinject } from "aurelia-framework";
+import { DataService } from "../../dataService";
+import { Mortgage } from "../../models/mortgage";
 
 @autoinject
 export class Home {
-    mortgages: Mortgage[];
+    public mortgages: Mortgage[];
 
-    constructor(private dataService: DataService) {
-       
-    }
+    constructor(private dataService: DataService) { }
 
-    async activate(): Promise<Mortgage[]> {
+    public async activate(): Promise<Mortgage[]> {
         this.mortgages = await this.dataService.getMortgages();
         return this.mortgages;
     }

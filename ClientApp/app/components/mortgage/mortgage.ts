@@ -1,18 +1,19 @@
-﻿import { autoinject } from 'aurelia-framework';
-import { Router } from 'aurelia-router';
-import { DialogService } from 'aurelia-dialog';
-import * as toastr from 'toastr';
-import { Mortgage, AmortizationData } from '../../models/mortgage';
-import { DataService } from '../../dataService';
-import { ConfirmDialog } from '../confirmDialog/confirmDialog';
-import { areEqual } from '../../utilities';
+﻿import { DialogService } from "aurelia-dialog";
+import { autoinject } from "aurelia-framework";
+import { Router } from "aurelia-router";
+import * as toastr from "toastr";
+import { DataService } from "../../dataService";
+import { IAmortizationData, Mortgage } from "../../models/mortgage";
+import { areEqual, computedFrom, deepCopy } from "../../utilities";
+import { ConfirmDialog } from "../confirmDialog/confirmDialog";
 
 @autoinject
 export class MortgageViewModel {
-    mortgage: Mortgage;
-    originalMortgage: Mortgage;
-    amortizationData: AmortizationData[];
-    amortizationOption: string = "YEARLY";
+    public mortgage: Mortgage;
+    public originalMortgage: Mortgage;
+
+    public amortizationData: IAmortizationData[];
+    public amortizationOption: string = "YEARLY";
 
     constructor(private dataService: DataService,
                 private router: Router,
@@ -20,20 +21,25 @@ export class MortgageViewModel {
         this.mortgage = this.createDefaultMortgage();
     }
 
-    async activate(params: any): Promise<Mortgage> {
-        let id = params.id;
+    public async activate(params: any): Promise<Mortgage> {
+        const id = params.id;
         if (id && id !== 0) {
             this.mortgage = await this.dataService.getMortgage(id);
         }
 
-        this.originalMortgage = JSON.parse(JSON.stringify(this.mortgage));
+        this.updateOriginalMortgage();
 
         return this.mortgage;
     }
 
-    canDeactivate(): Promise<boolean> {
+    public canDeactivate(): Promise<boolean> {
         if (this.canSave) {
-            return this.dialogService.open({ viewModel: ConfirmDialog, model: 'You have unsaved changes.  Are you sure you want to leave?' }).whenClosed(response => {
+            const dialogModel = {
+                message: "You have unsaved changes.  Are you sure you want to leave?",
+                title: "Confirm",
+            };
+
+            return this.dialogService.open({ viewModel: ConfirmDialog, model: dialogModel }).whenClosed((response) => {
                 return response.output;
             });
         }
@@ -41,53 +47,66 @@ export class MortgageViewModel {
         return Promise.resolve(true);
     }
 
-    calculateAmortization() {
-        this.amortizationData = this.mortgage.computeAmortization(this.amortizationOption == "YEARLY");
+    public calculateAmortization() {
+        this.amortizationData = this.mortgage.computeAmortization(this.amortizationOption === "YEARLY");
     }
 
-    async save() {
-        let isNew = this.isNewMortgage;
+    public async save() {
+        const isNew = this.isNewMortgage;
         this.mortgage = await this.dataService.saveMortgage(this.mortgage);
+        this.updateOriginalMortgage();
+
         // navigate to the new mortgage's route
         if (isNew) {
-            this.router.navigateToRoute('mortgage', { id: this.mortgage.id });
+            this.router.navigateToRoute("mortgage", { id: this.mortgage.id });
         }
 
-        toastr.success('Mortgage saved.');
+        toastr.success("Mortgage saved.");
     }
 
-    delete() {
-        this.dialogService.open({ viewModel: ConfirmDialog, model: 'Are you sure you want to delete this mortgage?' }).whenClosed(response => {
+    public delete() {
+        const dialogModel = {
+            message: "Are you sure you want to delete this mortgage?",
+            title: "Confirm Delete",
+        };
+
+        this.dialogService.open({ viewModel: ConfirmDialog, model: dialogModel }).whenClosed((response) => {
             if (response.output === true) {
-                this.dataService.deleteMortgage(this.mortgage.id).then(success => {
+                this.dataService.deleteMortgage(this.mortgage.id).then((success) => {
                     if (success) {
-                        this.router.navigateToRoute('home');
-                        toastr.success('Mortgage deleted.');
+                        this.router.navigateToRoute("home");
+                        toastr.success("Mortgage deleted.");
                     }
                 });
             }
         });
     }
 
-    get isNewMortgage(): boolean {
+    @computedFrom<MortgageViewModel>("mortgage")
+    public get isNewMortgage(): boolean {
         return this.mortgage.id === 0;
     }
 
-    get canSave(): boolean {
+    @computedFrom<MortgageViewModel>("isNewMortgage", "mortgage", "originalMortgage")
+    public get canSave(): boolean {
         return this.isNewMortgage || !areEqual(this.mortgage, this.originalMortgage);
     }
 
     private createDefaultMortgage() {
-        let m = new Mortgage();
+        const mortgage = new Mortgage();
 
         // setup a default mortgage
-        m.purchasePrice = 200000;
-        m.downPayment = 40000;
-        m.term = 30;
-        m.rate = 4.5;
-        m.propertyTax = 2000;
-        m.name = "New Mortgage";
+        mortgage.purchasePrice = 200000;
+        mortgage.downPayment = 40000;
+        mortgage.term = 30;
+        mortgage.rate = 4.5;
+        mortgage.propertyTax = 2000;
+        mortgage.name = "New Mortgage";
 
-        return m;
+        return mortgage;
+    }
+
+    private updateOriginalMortgage() {
+        this.originalMortgage = deepCopy(this.mortgage);
     }
 }
